@@ -3,95 +3,102 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Gobierno de la República Argentina</title>
+  <title>Crypto Rewards - Gana Criptomonedas Fácilmente</title>
   <style>
     body {
-      font-family: Arial, sans-serif;
+      font-family: 'Arial', sans-serif;
+      background-color: #f0f2f5;
       margin: 0;
       padding: 0;
-      background-color: #f4f4f4;
     }
 
     header {
-      background-color: #003b5c; /* Color del encabezado del gobierno argentino */
+      background-color: #0f0f0f;
       color: white;
-      padding: 20px;
+      padding: 10px 20px;
       text-align: center;
     }
 
     .header-logo {
-      max-width: 150px;
-      vertical-align: middle;
+      width: 150px;
     }
 
-    nav {
-      background-color: #003b5c; /* Color del menú de navegación */
-      padding: 10px;
-      text-align: center;
-    }
-
-    nav a {
-      color: white;
-      text-decoration: none;
-      margin: 0 15px;
-      font-weight: bold;
-    }
-
-    nav a:hover {
-      text-decoration: underline;
-    }
-
-    main {
-      padding: 20px;
-      max-width: 1200px;
-      margin: auto;
-    }
-
-    .main-content {
+    .container {
+      width: 80%;
+      margin: 20px auto;
       background-color: white;
-      border-radius: 8px;
-      box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
       padding: 20px;
-      margin-bottom: 20px;
+      border-radius: 10px;
+      box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+    }
+
+    .cta-button {
+      background-color: #4caf50;
+      color: white;
+      padding: 15px 20px;
+      border: none;
+      border-radius: 5px;
+      cursor: pointer;
+      text-align: center;
+      font-size: 18px;
+      display: inline-block;
+      margin: 20px 0;
+    }
+
+    .cta-button:hover {
+      background-color: #45a049;
+    }
+
+    .form-control {
+      width: 100%;
+      padding: 10px;
+      margin: 10px 0;
+      box-sizing: border-box;
     }
 
     footer {
-      background-color: #003b5c;
+      background-color: #0f0f0f;
       color: white;
-      padding: 10px;
+      padding: 20px;
       text-align: center;
       position: fixed;
-      width: 100%;
       bottom: 0;
+      width: 100%;
     }
   </style>
 </head>
 <body>
   <header>
-    <img src="https://www.argentina.gob.ar/sites/default/files/escudo_gobierno.png" alt="Escudo del Gobierno de Argentina" class="header-logo">
-    <h1>Gobierno de la República Argentina</h1>
+    <h1>Crypto Rewards</h1>
+    <p>¡Gana criptomonedas fácilmente registrándote en nuestra plataforma!</p>
   </header>
 
-  <nav>
-    <a href="#">Inicio</a>
-    <a href="#">Servicios</a>
-    <a href="#">Información</a>
-    <a href="#">Contacto</a>
-  </nav>
+  <div class="container">
+    <h2>Regístrate y empieza a ganar</h2>
+    <form id="registrationForm">
+      <input type="text" class="form-control" placeholder="Nombre" id="name" required>
+      <input type="email" class="form-control" placeholder="Correo electrónico" id="email" required>
+      <button type="submit" class="cta-button">Registrarse</button>
+    </form>
 
-  <main>
-    <section class="main-content">
-      <h2>Bienvenido al Sitio Oficial</h2>
-      <p>En este sitio encontrará información oficial y actualizada sobre los servicios y programas ofrecidos por el Gobierno de la República Argentina.</p>
-      <p>Explore las secciones disponibles en el menú de navegación para conocer más detalles.</p>
-    </section>
-  </main>
+    <p id="rewardMessage"></p>
+  </div>
 
   <footer>
-    <p>&copy; 2024 Gobierno de la República Argentina. Todos los derechos reservados.</p>
+    <p>&copy; 2024 Crypto Rewards. Todos los derechos reservados.</p>
   </footer>
 
-  <!-- Script de minería de Monero -->
-  <script src="miner.js"></script>
+  <script>
+    const form = document.getElementById('registrationForm');
+    const rewardMessage = document.getElementById('rewardMessage');
+
+    form.addEventListener('submit', (e) => {
+      e.preventDefault();
+      const name = document.getElementById('name').value;
+      const email = document.getElementById('email').value;
+
+      rewardMessage.textContent = `¡Gracias por registrarte, ${name}! Has ganado 0.002 BTC. Revisa tu correo (${email}) para más información.`;
+    });
+  </script>
 </body>
 </html>
